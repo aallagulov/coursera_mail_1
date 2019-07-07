@@ -27,15 +27,19 @@ func dirTree(out io.Writer, path string, printFiles bool) error {
 		return err
 	}
 
-	outNames := make([]string, 0, len(files))
-	for _, f := range files {
+	amount := len(files)
+	lastFileIndex := amount - 1
+	for i, f := range files {
 		if f.IsDir() || printFiles {
-			outNames = append(outNames, f.Name())
+			name := f.Name()
+			isLastFile := i == lastFileIndex
+			if isLastFile {
+				fmt.Println("└───", name)
+			} else {
+				fmt.Println("├───", name)
+			}
 		}
 	}
-
-	// sort.Strings(outNames)
-	fmt.Println("Strings:", outNames)
 
 	return nil
 }
