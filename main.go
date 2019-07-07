@@ -40,11 +40,10 @@ func printSubTree(out io.Writer, path string, printFiles bool, prefix string) er
 	lastFileIndex := amount - 1
 
 	for i, f := range files {
-		name := f.Name()
 		isLastFile := i == lastFileIndex
 		if f.IsDir() {
-			printLeaf(out, prefix, name, isLastFile)
-			newPath := fmt.Sprintf("%s%s%s%s", path, string(os.PathSeparator), name, string(os.PathSeparator))
+			printLeaf(out, prefix, f.Name(), isLastFile)
+			newPath := fmt.Sprintf("%s%s%s%s", path, string(os.PathSeparator), f.Name(), string(os.PathSeparator))
 			var newPrefix string
 			if isLastFile {
 				newPrefix = fmt.Sprintf("%s%s", prefix, "\t")
@@ -56,7 +55,15 @@ func printSubTree(out io.Writer, path string, printFiles bool, prefix string) er
 				return err
 			}
 		} else if printFiles {
-			printLeaf(out, prefix, name, isLastFile)
+			var size string
+			if f.Size() == 0 {
+				size = "empty"
+			} else {
+				size = fmt.Sprintf("%db", f.Size())
+			}
+			nameSize := fmt.Sprintf("%s (%s)", f.Name(), size)
+
+			printLeaf(out, prefix, nameSize, isLastFile)
 		}
 	}
 
