@@ -59,7 +59,7 @@ func printSubTree(out io.Writer, path string, printFiles bool, prefix string) er
 			if isLastFile {
 				newPrefix = fmt.Sprintf("%s%s", prefix, "\t")
 			} else {
-				newPrefix = fmt.Sprintf("%s|%s", prefix, "\t")
+				newPrefix = fmt.Sprintf("%s│%s", prefix, "\t")
 			}
 			err := printSubTree(out, newPath, printFiles, newPrefix)
 			if err != nil {
