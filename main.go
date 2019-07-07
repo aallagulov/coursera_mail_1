@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"sort"
 )
 
 func main() {
@@ -36,10 +37,20 @@ func printSubTree(out io.Writer, path string, printFiles bool, prefix string) er
 		return err
 	}
 
-	amount := len(files)
+	var sortedFiles []os.FileInfo
+	for _, f := range files {
+		if f.IsDir() || printFiles {
+			sortedFiles = append(sortedFiles, f)
+		}
+	}
+	sort.Slice(sortedFiles, func(i, j int) bool {
+		return sortedFiles[i].Name() < sortedFiles[j].Name()
+	})
+
+	amount := len(sortedFiles)
 	lastFileIndex := amount - 1
 
-	for i, f := range files {
+	for i, f := range sortedFiles {
 		isLastFile := i == lastFileIndex
 		if f.IsDir() {
 			printLeaf(out, prefix, f.Name(), isLastFile)
